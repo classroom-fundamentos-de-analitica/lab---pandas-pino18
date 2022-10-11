@@ -55,7 +55,7 @@ def pregunta_03():
     return (df3.groupby(["_c1"]).size())
 
 
-
+# NO DIO
 def pregunta_04():
     """
     Calcule el promedio de _c2 por cada letra de la _c1 del archivo `tbl0.tsv`.
@@ -69,12 +69,14 @@ def pregunta_04():
     Name: _c2, dtype: float64
     """
     df4=tbl0[["_c1", "_c2"]]
-    return (df4.groupby(["_c1"]).mean())
+    df4["media"]=df4.groupby(["_c1"])["_c2"].transform("mean")
+    return (df4)
+
+#print(pregunta_04())
 
 
 
-
-
+# NO DIO 
 def pregunta_05():
     """
     Calcule el valor máximo de _c2 por cada letra en la columna _c1 del archivo
@@ -110,7 +112,7 @@ def pregunta_06():
     return listamayus
 
 
-
+# NO DIO
 def pregunta_07():
     """
     Calcule la suma de la _c2 por cada letra de la _c1 del archivo `tbl0.tsv`.
@@ -170,7 +172,6 @@ def pregunta_09():
     return df09
 
 
-
 def pregunta_10():
     """
     Construya una tabla que contenga _c1 y una lista separada por ':' de los valores de
@@ -185,7 +186,12 @@ def pregunta_10():
     3   D                  1:2:3:5:5:7
     4   E  1:1:2:3:3:4:5:5:5:6:7:8:8:9
     """
-    return
+    df4=tbl0[["_c1", "_c2"]]
+    df4["_c2"]= df4["_c2"].apply(str)
+    df41=df4.rename(columns={"_c1": "_c0", "_c2": "_c1"})
+    return (df41.groupby("_c0").agg({"_c1":lambda x: ":".join(sorted(x))}))
+    
+
 
 
 def pregunta_11():
