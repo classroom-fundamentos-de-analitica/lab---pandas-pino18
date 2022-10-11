@@ -186,12 +186,17 @@ def pregunta_10():
     3   D                  1:2:3:5:5:7
     4   E  1:1:2:3:3:4:5:5:5:6:7:8:8:9
     """
-    df4=tbl0[["_c1", "_c2"]]
+    
+    df4=tbl0.iloc[:, 1:3]
     df4["_c2"]= df4["_c2"].apply(str)
     df41=df4.rename(columns={"_c1": "_c0", "_c2": "_c1"})
-    return (df41.groupby("_c0").agg({"_c1":lambda x: ":".join(sorted(x))}))
+    df42=df41.groupby("_c0").agg({"_c1":lambda x: ":".join(sorted(x))})
+    #tutors=[0,1,2,3,4]
+    #df42.insert(0,'', tutors)
+    #df43=df42[["","_c0","_c1"]]
+    return (df42)
     
-
+print(pregunta_10())
 
 
 def pregunta_11():
