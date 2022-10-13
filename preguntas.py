@@ -51,9 +51,8 @@ def pregunta_03():
     Name: _c1, dtype: int64
 
     """
-    df3=tbl0[["_c1", "_c2"]]
-    return (df3.groupby(["_c1"]).size())
-
+    return (tbl0.groupby("_c1").size())
+#print(pregunta_03())
 
 # NO DIO
 def pregunta_04():
@@ -68,9 +67,7 @@ def pregunta_04():
     E    4.785714
     Name: _c2, dtype: float64
     """
-    df4=tbl0[["_c1", "_c2"]]
-    df4["media"]=df4.groupby(["_c1"])["_c2"].transform("mean")
-    return (df4)
+    return (tbl0.groupby("_c1").mean()["_c2"])
 
 #print(pregunta_04())
 
@@ -91,10 +88,9 @@ def pregunta_05():
     E    9
     Name: _c2, dtype: int64
     """
-    df5=tbl0[["_c1", "_c2"]]
-    return (df5.groupby(["_c1"]).max())
+    return (tbl0.groupby("_c1").max()["_c2"])
 
-
+#print(pregunta_05())
 
 
 def pregunta_06():
@@ -126,10 +122,9 @@ def pregunta_07():
     E    67
     Name: _c2, dtype: int64
     """
-    df4=tbl0[["_c1", "_c2"]]
-    return (df4.groupby(["_c1"]).sum())
+    return (tbl0.groupby("_c1").sum()["_c2"])
 
-
+#print(pregunta_07())
 
 def pregunta_08():
     """
@@ -171,6 +166,10 @@ def pregunta_09():
     df09["year"] = df09["_c3"].apply(lambda x: x.split("-")[0])
     return df09
 
+def format(df):
+    aux=sorted([i for i in df["_c2"]])
+    aux=[str(i) for i in aux]
+    return(":".join(aux))
 
 def pregunta_10():
     """
@@ -187,14 +186,10 @@ def pregunta_10():
     4   E  1:1:2:3:3:4:5:5:5:6:7:8:8:9
     """
     
-    df4=tbl0.iloc[:, 1:3]
-    df4["_c2"]= df4["_c2"].apply(str)
-    df41=df4.rename(columns={"_c1": "_c0", "_c2": "_c1"})
-    df42=df41.groupby("_c0").agg({"_c1":lambda x: ":".join(sorted(x))})
-    #tutors=[0,1,2,3,4]
-    #df42.insert(0,'', tutors)
-    #df43=df42[["","_c0","_c1"]]
-    return (df42)
+    ans =tbl0.groupby("_c1").apply(format).to_frame().reset_index()
+    ans.rename(columns={0: "_c2"}, inplace=True)
+    ans.set_index("_c1", inplace=True)
+    return (ans)
     
 print(pregunta_10())
 
