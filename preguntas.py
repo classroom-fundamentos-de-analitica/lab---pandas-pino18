@@ -185,13 +185,13 @@ def pregunta_10():
     3   D                  1:2:3:5:5:7
     4   E  1:1:2:3:3:4:5:5:5:6:7:8:8:9
     """
-    
+
     ans =tbl0.groupby("_c1").apply(format).to_frame().reset_index()
     ans.rename(columns={0: "_c2"}, inplace=True)
     ans.set_index("_c1", inplace=True)
     return (ans)
     
-print(pregunta_10())
+#print(pregunta_10())
 
 
 def pregunta_11():
@@ -213,6 +213,7 @@ def pregunta_11():
     return
 
 
+
 def pregunta_12():
     """
     Construya una tabla que contenga _c0 y una lista separada por ',' de los valores de
@@ -228,9 +229,15 @@ def pregunta_12():
     38   38                    eee:0,fff:9,iii:2
     39   39                    ggg:3,hhh:8,jjj:5
     """
-    return
+    juntos=tbl2.set_index(["_c5a", "_c5b"]).groupby("_c0").groups
 
+    d={}
+    for i in juntos.items():
+        for j in sorted(i[1]):
+            d.setdefault(i[0],[]).append(f"{j[0]}:{j[1]}")
+    return pd.DataFrame({"_c0":d.keys(), "_c5":[",".join(valor) for valor in d.values()]})
 
+print(pregunta_12())
 def pregunta_13():
     """
     Si la columna _c0 es la clave en los archivos `tbl0.tsv` y `tbl2.tsv`, compute la
