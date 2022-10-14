@@ -52,9 +52,9 @@ def pregunta_03():
 
     """
     return (tbl0.groupby("_c1").size())
-#print(pregunta_03())
 
-# NO DIO
+
+
 def pregunta_04():
     """
     Calcule el promedio de _c2 por cada letra de la _c1 del archivo `tbl0.tsv`.
@@ -69,11 +69,10 @@ def pregunta_04():
     """
     return (tbl0.groupby("_c1").mean()["_c2"])
 
-#print(pregunta_04())
 
 
 
-# NO DIO 
+
 def pregunta_05():
     """
     Calcule el valor máximo de _c2 por cada letra en la columna _c1 del archivo
@@ -90,7 +89,6 @@ def pregunta_05():
     """
     return (tbl0.groupby("_c1").max()["_c2"])
 
-#print(pregunta_05())
 
 
 def pregunta_06():
@@ -108,7 +106,6 @@ def pregunta_06():
     return listamayus
 
 
-# NO DIO
 def pregunta_07():
     """
     Calcule la suma de la _c2 por cada letra de la _c1 del archivo `tbl0.tsv`.
@@ -123,9 +120,7 @@ def pregunta_07():
     Name: _c2, dtype: int64
     """
     return (tbl0.groupby("_c1").sum()["_c2"])
-
-#print(pregunta_07())
-
+    
 def pregunta_08():
     """
     Agregue una columna llamada `suma` con la suma de _c0 y _c2 al archivo `tbl0.tsv`.
@@ -166,7 +161,7 @@ def pregunta_09():
     df09["year"] = df09["_c3"].apply(lambda x: x.split("-")[0])
     return df09
 
-def format(df):
+def format1(df):
     aux=sorted([i for i in df["_c2"]])
     aux=[str(i) for i in aux]
     return(":".join(aux))
@@ -186,13 +181,15 @@ def pregunta_10():
     4   E  1:1:2:3:3:4:5:5:5:6:7:8:8:9
     """
 
-    ans =tbl0.groupby("_c1").apply(format).to_frame().reset_index()
+    ans =tbl0.groupby("_c1").apply(format1).to_frame().reset_index()
     ans.rename(columns={0: "_c2"}, inplace=True)
     ans.set_index("_c1", inplace=True)
     return (ans)
     
-#print(pregunta_10())
-
+def format(df):
+    aux=sorted([i for i in df["_c4"]])
+    aux=[str(i) for i in aux]
+    return(",".join(aux))
 
 def pregunta_11():
     """
@@ -210,8 +207,10 @@ def pregunta_11():
     38   38      d,e
     39   39    a,d,f
     """
-    return
-
+    ans =tbl1.groupby("_c0").apply(format).to_frame().reset_index()
+    ans.rename(columns={0: "_c4"}, inplace=True)
+    #ans.set_index("_c1", inplace=True)
+    return (ans)
 
 
 def pregunta_12():
@@ -230,14 +229,13 @@ def pregunta_12():
     39   39                    ggg:3,hhh:8,jjj:5
     """
     juntos=tbl2.set_index(["_c5a", "_c5b"]).groupby("_c0").groups
-
     d={}
     for i in juntos.items():
         for j in sorted(i[1]):
             d.setdefault(i[0],[]).append(f"{j[0]}:{j[1]}")
     return pd.DataFrame({"_c0":d.keys(), "_c5":[",".join(valor) for valor in d.values()]})
 
-print(pregunta_12())
+
 def pregunta_13():
     """
     Si la columna _c0 es la clave en los archivos `tbl0.tsv` y `tbl2.tsv`, compute la
@@ -252,4 +250,4 @@ def pregunta_13():
     E    275
     Name: _c5b, dtype: int64
     """
-    return
+    return((pd.merge(tbl2,tbl0).groupby("_c1").sum()["_c5b"]))
