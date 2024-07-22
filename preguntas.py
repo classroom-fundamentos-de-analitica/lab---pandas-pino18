@@ -22,7 +22,8 @@ def pregunta_01():
     40
 
     """
-    return
+    return (tbl0.shape[0])
+
 
 
 def pregunta_02():
@@ -33,7 +34,7 @@ def pregunta_02():
     4
 
     """
-    return
+    return (tbl0.shape[1])
 
 
 def pregunta_03():
@@ -50,7 +51,8 @@ def pregunta_03():
     Name: _c1, dtype: int64
 
     """
-    return
+    return (tbl0.groupby("_c1").size())
+
 
 
 def pregunta_04():
@@ -65,7 +67,10 @@ def pregunta_04():
     E    4.785714
     Name: _c2, dtype: float64
     """
-    return
+    return (tbl0.groupby("_c1").mean()["_c2"])
+
+
+
 
 
 def pregunta_05():
@@ -82,7 +87,8 @@ def pregunta_05():
     E    9
     Name: _c2, dtype: int64
     """
-    return
+    return (tbl0.groupby("_c1").max()["_c2"])
+
 
 
 def pregunta_06():
@@ -94,7 +100,10 @@ def pregunta_06():
     ['A', 'B', 'C', 'D', 'E', 'F', 'G']
 
     """
-    return
+    listac4 = tbl1["_c4"].unique()
+    listamayus = [x.upper() for x in listac4]
+    listamayus.sort()
+    return listamayus
 
 
 def pregunta_07():
@@ -110,9 +119,8 @@ def pregunta_07():
     E    67
     Name: _c2, dtype: int64
     """
-    return
-
-
+    return (tbl0.groupby("_c1").sum()["_c2"])
+    
 def pregunta_08():
     """
     Agregue una columna llamada `suma` con la suma de _c0 y _c2 al archivo `tbl0.tsv`.
@@ -128,7 +136,10 @@ def pregunta_08():
     39   39   E    5  1998-01-26    44
 
     """
-    return
+    df08 = tbl0
+    df08["suma"] = df08["_c0"]+df08["_c2"]
+    return(df08)
+
 
 
 def pregunta_09():
@@ -146,8 +157,14 @@ def pregunta_09():
     39   39   E    5  1998-01-26  1998
 
     """
-    return
+    df09 = tbl0
+    df09["year"] = df09["_c3"].apply(lambda x: x.split("-")[0])
+    return df09
 
+def format1(df):
+    aux=sorted([i for i in df["_c2"]])
+    aux=[str(i) for i in aux]
+    return(":".join(aux))
 
 def pregunta_10():
     """
@@ -163,8 +180,16 @@ def pregunta_10():
     3   D                  1:2:3:5:5:7
     4   E  1:1:2:3:3:4:5:5:5:6:7:8:8:9
     """
-    return
 
+    ans =tbl0.groupby("_c1").apply(format1).to_frame().reset_index()
+    ans.rename(columns={0: "_c2"}, inplace=True)
+    ans.set_index("_c1", inplace=True)
+    return (ans)
+    
+def format(df):
+    aux=sorted([i for i in df["_c4"]])
+    aux=[str(i) for i in aux]
+    return(",".join(aux))
 
 def pregunta_11():
     """
@@ -182,7 +207,10 @@ def pregunta_11():
     38   38      d,e
     39   39    a,d,f
     """
-    return
+    ans =tbl1.groupby("_c0").apply(format).to_frame().reset_index()
+    ans.rename(columns={0: "_c4"}, inplace=True)
+    #ans.set_index("_c1", inplace=True)
+    return (ans)
 
 
 def pregunta_12():
@@ -200,7 +228,12 @@ def pregunta_12():
     38   38                    eee:0,fff:9,iii:2
     39   39                    ggg:3,hhh:8,jjj:5
     """
-    return
+    juntos=tbl2.set_index(["_c5a", "_c5b"]).groupby("_c0").groups
+    d={}
+    for i in juntos.items():
+        for j in sorted(i[1]):
+            d.setdefault(i[0],[]).append(f"{j[0]}:{j[1]}")
+    return pd.DataFrame({"_c0":d.keys(), "_c5":[",".join(valor) for valor in d.values()]})
 
 
 def pregunta_13():
@@ -217,4 +250,4 @@ def pregunta_13():
     E    275
     Name: _c5b, dtype: int64
     """
-    return
+    return((pd.merge(tbl2,tbl0).groupby("_c1").sum()["_c5b"]))
